@@ -3,6 +3,7 @@ from Ball import Ball
 import pygame
 from pygame import gfxdraw
 import sys
+import random
 
 #Setting up the display
 windowSize = windowWidth, windowHeight = 900, 500
@@ -29,12 +30,25 @@ def handleBallMovement(ball):
         ball.ballXSpeed *= -1
     if ball.ballY - ball.ballRadius <= 0:
         ball.ballYSpeed *= -1
+    if ball.ballY > windowHeight:
+        ball.ballXSpeed = 0
+        ball.ballYSpeed = 0
+        ball.ballX = paddle.paddleX + paddle.paddleWidth / 2 - ball.ballRadius / 2
+        ball.ballY = paddle.paddleY - paddle.paddleHeight + 1
+        #TODO: decrement lives here
+
 
     #Detecting ball's collision with the paddle
     if ball.ballX >= paddle.paddleX and ball.ballX <= paddle.paddleX + paddle.paddleWidth and ball.ballY + ball.ballRadius >= paddle.paddleY and ball.ballY + ball.ballRadius >= paddle.paddleY:
         ball.ballYSpeed *= -1
-        #Change the XSpeed of the ball based on where the ball lands on the paddle
 
+        #Change the XSpeed of the ball based on where the ball lands on the paddle
+        if ball.ballX < paddle.paddleX + paddle.paddleWidth / 2: #The ball is on the left side of the paddle
+            if ball.ballXSpeed > 0:
+                ball.ballXSpeed *= -1
+        if ball.ballX >= paddle.paddleX + paddle.paddleWidth/2: #The ball is on the right side of the paddle
+            if ball.ballXSpeed < 0:
+                ball.ballXSpeed *= -1
 
 
 
@@ -55,8 +69,10 @@ def main():
 
             #Detect mouse click to start the game
             if event.type == pygame.MOUSEBUTTONDOWN:
-                ball.ballYSpeed = -1
-                ball.ballXSpeed = -3
+                #If the paddle is on the right side of the screen the ball should go left
+                ball.ballYSpeed = random.randint(-3, -1)
+                ball.ballXSpeed = -random.randint(-3, -1)
+                #TODO: fix ball moving in the air bug
 
             #Assigning the location of the paddle to the X Position of the mouse
             paddle.paddleX = mouseX - paddle.paddleWidth/2
@@ -74,6 +90,8 @@ def main():
 
         # Drawing the paddle
         pygame.draw.rect(WINDOW, paddle.paddleColor, (paddle.paddleX, paddle.paddleY, paddle.paddleWidth, paddle.paddleHeight), border_radius=5)
+
+        #Drawing the ball (might change the ball to a rect)
         pygame.draw.circle(WINDOW, ball.ballColor, (ball.ballX, ball.ballY), ball.ballRadius)
         pygame.display.update()
 
