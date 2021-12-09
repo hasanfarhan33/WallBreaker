@@ -6,3 +6,4 @@ class Ball:
         self.ballYSpeed = 0
         self.ballRadius = 8
         self.ballColor = (255, 0, 0)
+        self.ballLaunched = False

@@ -31,6 +31,7 @@ def handleBallMovement(ball):
     if ball.ballY - ball.ballRadius <= 0:
         ball.ballYSpeed *= -1
     if ball.ballY > windowHeight:
+        ball.ballLaunched = False
         ball.ballXSpeed = 0
         ball.ballYSpeed = 0
         ball.ballX = paddle.paddleX + paddle.paddleWidth / 2 - ball.ballRadius / 2
@@ -68,11 +69,13 @@ def main():
                 running = False
 
             #Detect mouse click to start the game
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                #If the paddle is on the right side of the screen the ball should go left
-                ball.ballYSpeed = random.randint(-3, -1)
-                ball.ballXSpeed = -random.randint(-3, -1)
-                #TODO: fix ball moving in the air bug
+            if not ball.ballLaunched:
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    #If the paddle is on the right side of the screen the ball should go left
+                    ball.ballYSpeed = random.randint(-3, -1)
+                    ball.ballXSpeed = -random.randint(-3, -1)
+                    ball.ballLaunched = True
+
 
             #Assigning the location of the paddle to the X Position of the mouse
             paddle.paddleX = mouseX - paddle.paddleWidth/2
