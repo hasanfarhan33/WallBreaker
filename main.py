@@ -1,5 +1,6 @@
 from Paddle import Paddle
 from Ball import Ball
+from Brick import Brick
 import pygame
 from pygame import gfxdraw
 import sys
@@ -15,12 +16,35 @@ LIVES = 3
 #INSTANTIATING CLASSES HERE
 paddle = Paddle()
 ball = Ball()
+brick = Brick()
+
+#TESTING BRICKS HERE
+brick.brickX = 100
+brick.brickY = 100
 
 
 def drawingWindow():
     pygame.display.set_caption("Wallbreaker")
     window = pygame.display.set_mode(windowSize)
     return window
+
+def drawStuff(window):
+    # Drawing the paddle
+    pygame.draw.rect(window, paddle.paddleColor,
+                     (paddle.paddleX, paddle.paddleY, paddle.paddleWidth, paddle.paddleHeight), border_radius=5)
+    # Drawing the ball (might change the ball to a rect)
+    pygame.draw.circle(window, ball.ballColor, (ball.ballX, ball.ballY), ball.ballRadius)
+
+    # Drawing bricks here
+    # TODO: Add random colors to the brick or pick a random color from an array of colors
+    pygame.draw.rect(window, (255, 255, 255), (brick.brickX, brick.brickY, brick.brickWidth, brick.brickHeight))
+
+def handleBrickCollisions(ball, brick):
+    #Bottom of the brick
+    if ball.ballX + ball.ballRadius < brick.brickX + brick.brickWidth and ball.ballX + ball.ballRadius > brick.brickX:
+        if ball.ballY + ball.ballRadius <= brick.brickY + brick.brickHeight and ball.ballY + ball.ballRadius > brick.brickY:
+            print("THE BALL IS INSIDE THE BRICK")
+
 
 def handleBallMovement(ball):
     ball.ballX += ball.ballXSpeed
@@ -71,9 +95,9 @@ def main():
             #Detect mouse click to start the game
             if not ball.ballLaunched:
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    #If the paddle is on the right side of the screen the ball should go left
-                    ball.ballYSpeed = random.randint(-3, -1)
-                    ball.ballXSpeed = -random.randint(-3, -1)
+                    #TODO: If the paddle is on the right side of the screen the ball should go left
+                    ball.ballYSpeed = random.randint(-3, -2)
+                    ball.ballXSpeed = -random.randint(-3, -2)
                     ball.ballLaunched = True
 
 
@@ -90,12 +114,8 @@ def main():
         #Window background
         WINDOW.fill((0, 0, 0))
         handleBallMovement(ball)
-
-        # Drawing the paddle
-        pygame.draw.rect(WINDOW, paddle.paddleColor, (paddle.paddleX, paddle.paddleY, paddle.paddleWidth, paddle.paddleHeight), border_radius=5)
-
-        #Drawing the ball (might change the ball to a rect)
-        pygame.draw.circle(WINDOW, ball.ballColor, (ball.ballX, ball.ballY), ball.ballRadius)
+        handleBrickCollisions(ball, brick)
+        drawStuff(WINDOW)
         pygame.display.update()
 
 
