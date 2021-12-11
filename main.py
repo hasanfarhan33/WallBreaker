@@ -40,10 +40,13 @@ def drawStuff(window):
     pygame.draw.rect(window, (255, 255, 255), (brick.brickX, brick.brickY, brick.brickWidth, brick.brickHeight))
 
 def handleBrickCollisions(ball, brick):
-    #Bottom of the brick
-    if ball.ballX + ball.ballRadius < brick.brickX + brick.brickWidth and ball.ballX + ball.ballRadius > brick.brickX:
-        if ball.ballY + ball.ballRadius <= brick.brickY + brick.brickHeight and ball.ballY + ball.ballRadius > brick.brickY:
-            print("THE BALL IS INSIDE THE BRICK")
+    if ball.ballX + ball.ballRadius >= brick.brickX and ball.ballX + ball.ballRadius <= brick.brickX + brick.brickWidth:
+        if ball.ballY + ball.ballRadius <= brick.brickY + brick.brickHeight and ball.ballY + ball.ballRadius >= brick.brickY:
+            if ball.ballY + ball.ballRadius >= brick.brickY or ball.ballY + ball.ballRadius <= brick.brickY + brick.brickHeight:
+                print("TOP EDGE or BOTTOM EDGE")
+                ball.ballYSpeed *= -1
+
+
 
 
 def handleBallMovement(ball):
@@ -97,7 +100,7 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     #TODO: If the paddle is on the right side of the screen the ball should go left
                     ball.ballYSpeed = random.randint(-3, -2)
-                    ball.ballXSpeed = -random.randint(-3, -2)
+                    ball.ballXSpeed = -random.randint(-4, -3)
                     ball.ballLaunched = True
 
 
@@ -110,7 +113,6 @@ def main():
                 ball.ballX = paddle.paddleX + paddle.paddleWidth/2 - ball.ballRadius/2
                 ball.ballY = paddle.paddleY - paddle.paddleHeight + 1
 
-        #Drawing things here (TURN THIS INTO A FUNCTION LATER)
         #Window background
         WINDOW.fill((0, 0, 0))
         handleBallMovement(ball)

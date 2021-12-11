@@ -3,4 +3,4 @@ class Brick:
         self.brickX = None
         self.brickY = None
         self.brickWidth = 400
-        self.brickHeight = 50
+        self.brickHeight = 200
