@@ -16,12 +16,22 @@ LIVES = 3
 #INSTANTIATING CLASSES HERE
 paddle = Paddle()
 ball = Ball()
-brick = Brick()
 
-#TESTING BRICKS HERE
-brick.brickX = 100
-brick.brickY = 100
+sampleBrick = Brick()
+sampleBrickX = sampleBrick.brickX = 100
+sampleBrickY = sampleBrick.brickY = 100
+sampleBrickHeight = sampleBrick.brickHeight
+sampleBrickWidth = sampleBrick.brickWidth
 
+brickArray = []
+bufferZone = 2
+#TODO: Create a for loop to add the bricks (maybe 20 bricks)
+for i in range(20):
+    brickArray.append(Brick()) #There are 20 bricks in here
+
+
+print(len(brickArray))
+print(brickArray)
 
 def drawingWindow():
     pygame.display.set_caption("Wallbreaker")
@@ -29,6 +39,12 @@ def drawingWindow():
     return window
 
 def drawStuff(window):
+
+    #Drawing Lives text
+    font = pygame.font.Font('Assets/PressStart2P-Regular.ttf', 24)
+    livesDisplay = font.render("Lives: " + str(LIVES), True, (255, 255, 255), (0, 0, 0))
+    window.blit(livesDisplay, (700, 10))
+
     # Drawing the paddle
     pygame.draw.rect(window, paddle.paddleColor,
                      (paddle.paddleX, paddle.paddleY, paddle.paddleWidth, paddle.paddleHeight), border_radius=5)
@@ -36,8 +52,9 @@ def drawStuff(window):
     pygame.draw.circle(window, ball.ballColor, (ball.ballX, ball.ballY), ball.ballRadius)
 
     # Drawing bricks here
-    # TODO: Add random colors to the brick or pick a random color from an array of colors
-    pygame.draw.rect(window, (255, 255, 255), (brick.brickX, brick.brickY, brick.brickWidth, brick.brickHeight))
+    #TODO: Draw multiple bricks here
+
+
 
 def handleBrickCollisions(ball, brick):
     if ball.ballX + ball.ballRadius >= brick.brickX and ball.ballX + ball.ballRadius <= brick.brickX + brick.brickWidth:
@@ -53,6 +70,7 @@ def handleBrickCollisions(ball, brick):
 
 
 def handleBallMovement(ball):
+
     ball.ballX += ball.ballXSpeed
     ball.ballY += ball.ballYSpeed
 
@@ -66,10 +84,11 @@ def handleBallMovement(ball):
         ball.ballYSpeed = 0
         ball.ballX = paddle.paddleX + paddle.paddleWidth / 2 - ball.ballRadius / 2
         ball.ballY = paddle.paddleY - paddle.paddleHeight + 1
-        #TODO: decrement lives here
+        #TODO: Decrement lives here
 
 
     #Detecting ball's collision with the paddle
+    #TODO: Make the rebound more dyanamic
     if ball.ballX >= paddle.paddleX and ball.ballX <= paddle.paddleX + paddle.paddleWidth and ball.ballY + ball.ballRadius >= paddle.paddleY and ball.ballY + ball.ballRadius >= paddle.paddleY:
         ball.ballYSpeed *= -1
 
